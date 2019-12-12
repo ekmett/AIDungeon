@@ -199,11 +199,15 @@ def play_aidungeon_2():
             elif action.lower() == "censor on":
                 generator.censor = True
 
-            elif action.lower() == "settemperature":
-                generator.temp = float(input("Enter new temperature (Current value = " + str(generator.temp) + ": "))
+            elif action.lower() == "settemp":
+                userinput = input("Enter new temperature (Current value = " + str(generator.temp) + "): ")
+                if userinput:
+                    generator.temp = float(userinput)
 
-            elif action.lower() == "setmemory":
-                generator.top_k = int(input("Enter new memory (Current value = " + str(generator.top_k) + ": "))
+            elif action.lower() == "setmem":
+                userinput = input("Enter new memory (Current value = " + str(generator.top_k) + "): ")
+                if userinput:
+                    generator.top_k = int(userinput)
 
             elif action.lower() == "save":
                 if upload_story:
