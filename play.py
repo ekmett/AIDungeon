@@ -89,6 +89,8 @@ def instructions():
     text += '\n  "print"    Prints a transcript of your adventure (without extra newline formatting)'
     text += '\n  "help"     Prints these instructions again'
     text += '\n  "censor off/on" to turn censoring off or on.'
+    text += '\n  "settemperature to modify the algorithm temperature value (advanced).'
+    text += '\n  "setmemory to modify the algorithm memory value aka top_k (advanced).'
     return text
 
 
@@ -101,6 +103,37 @@ def play_aidungeon_2():
     )
 
     upload_story = True
+    
+    # "temperature" dictates randomness. A low temperature means that the AI is
+    #  more likely to go with the word that best fits the context, a high
+    #  temperature makes the AI more random and it may chose surprising less fitting words
+    # original 0.4
+    temp = 0.4
+ 
+    # lower top_k is a hard limit of "how many fitting words should I consider",
+    #  i.e. lowering this value also limits the AI in creativity
+    # original 40
+    top_k = 40
+    
+    # Get user censorship option at startup, allowing NSFW content in the custom prompt:
+    censorship = True
+ 
+    console_print("\nBefore we start, would you like to change any advanced settings? (most users should skip this)\n")
+    choice = input("1) Change defaults\n-) Press enter to skip\n>")
+ 
+    if choice == "1":
+        console_print("\nDefault temperature (lower = slower less random plot): " + str(temp) + "\n" + 
+                      "Default memory (aka \"top_k\", lower = more stability less creative): " + 
+                      str(top_k) + "\n" + "Default censorship: " + str(censorship) + "\n")
+        userinput = input("New temperature (try 0.07-0.4, leave blank for default): ")
+        if userinput:
+            temp = float(userinput)
+        userinput = input("New memory/top_k (try 10-40, leave blank for default): ")
+        if userinput:
+            top_k = int(userinput)
+        censorship = not bool(input("Disable censorship? (leave blank for no): "))
+        console_print("\nLaunching with new values... Temperature: " + str(temp) + ", " + 
+                      "Memory: " + str(top_k) + ", " + "Censorship: " + str(censorship) + "\n")
 
     print("\nInitializing AI Dungeon! (This might take a few minutes)\n")
     generator = GPT2Generator()
@@ -140,33 +173,39 @@ def play_aidungeon_2():
         while True:
             sys.stdin.flush()
             action = input("> ")
-            if action == "restart":
+            if action.lower() == "restart":
                 rating = input("Please rate the story quality from 1-10: ")
                 rating_float = float(rating)
                 story_manager.story.rating = rating_float
                 break
 
-            elif action == "quit":
+            elif action.lower() == "quit":
                 rating = input("Please rate the story quality from 1-10: ")
                 rating_float = float(rating)
                 story_manager.story.rating = rating_float
                 exit()
 
-            elif action == "nosaving":
+            elif action.lower() == "nosaving":
                 upload_story = False
                 story_manager.story.upload_story = False
                 console_print("Saving turned off.")
 
-            elif action == "help":
+            elif action.lower() == "help":
                 console_print(instructions())
 
-            elif action == "censor off":
+            elif action.lower() == "censor off":
                 generator.censor = False
 
-            elif action == "censor on":
+            elif action.lower() == "censor on":
                 generator.censor = True
 
-            elif action == "save":
+            elif action.lower() == "settemperature":
+                generator.temp = float(input("Enter new temperature (Current value = " + str(generator.temp) + ": "))
+
+            elif action.lower() == "setmemory":
+                generator.top_k = int(input("Enter new memory (Current value = " + str(generator.top_k) + ": "))
+
+            elif action.lower() == "save":
                 if upload_story:
                     id = story_manager.story.save_to_storage()
                     console_print("Game saved.")
@@ -177,23 +216,23 @@ def play_aidungeon_2():
                 else:
                     console_print("Saving has been turned off. Cannot save.")
 
-            elif action == "load":
+            elif action.lower() == "load":
                 load_ID = input("What is the ID of the saved game?")
                 result = story_manager.story.load_from_storage(load_ID)
                 console_print("\nLoading Game...\n")
                 console_print(result)
 
-            elif len(action.split(" ")) == 2 and action.split(" ")[0] == "load":
+            elif len(action.split(" ")) == 2 and action.split(" ")[0].lower() == "load":
                 load_ID = action.split(" ")[1]
                 result = story_manager.story.load_from_storage(load_ID)
                 console_print("\nLoading Game...\n")
                 console_print(result)
 
-            elif action == "print":
+            elif action.lower() == "print":
                 print("\nPRINTING\n")
                 print(str(story_manager.story))
 
-            elif action == "revert":
+            elif action.lower() == "revert":
 
                 if len(story_manager.story.actions) is 0:
                     console_print("You can't go back any farther. ")
