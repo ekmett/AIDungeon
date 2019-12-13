@@ -89,8 +89,8 @@ def instructions():
     text += '\n  "print"    Prints a transcript of your adventure (without extra newline formatting)'
     text += '\n  "help"     Prints these instructions again'
     text += '\n  "censor off/on" to turn censoring off or on.'
-    text += '\n  "settemperature to modify the algorithm temperature value (advanced).'
-    text += '\n  "setmemory to modify the algorithm memory value aka top_k (advanced).'
+    text += '\n  "settemp to modify the algorithm temperature value (advanced).'
+    text += '\n  "setmem to modify the algorithm memory value aka top_k (advanced).'
     return text
 
 
@@ -259,6 +259,9 @@ def play_aidungeon_2():
 
                 elif action[0] == '"':
                     action = "You say " + action
+                    
+                elif action[0] == '!':
+                    action = "\n" + action[1:].replace("\\n", "\n") + "\n"
 
                 else:
                     action = action.strip()
