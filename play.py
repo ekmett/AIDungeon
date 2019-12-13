@@ -5,6 +5,7 @@ import time
 from generator.gpt2.gpt2_generator import *
 from story.story_manager import *
 from story.utils import *
+from func_timeout import func_timeout, FunctionTimedOut
 
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
 
@@ -89,8 +90,8 @@ def instructions():
     text += '\n  "print"    Prints a transcript of your adventure (without extra newline formatting)'
     text += '\n  "help"     Prints these instructions again'
     text += '\n  "censor off/on" to turn censoring off or on.'
-    text += '\n  "settemp to modify the algorithm temperature value (advanced).'
-    text += '\n  "setmem to modify the algorithm memory value aka top_k (advanced).'
+    text += '\n  "settemp" to modify the algorithm temperature value (advanced).'
+    text += '\n  "setmem" to modify the algorithm memory value aka top_k (advanced).'
     return text
 
 
