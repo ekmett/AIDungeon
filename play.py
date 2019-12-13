@@ -79,8 +79,10 @@ def select_game():
 
 def instructions():
     text = "\nAI Dungeon 2 Instructions:"
-    text += '\n Enter actions starting with a verb ex. "go to the tavern" or "attack the orc."'
+    text += '\n Enter actions starting with a verb ex. "go to the tavern" or "attack the orc." (without quotes)'
     text += '\n To speak enter \'say "(thing you want to say)"\' or just "(thing you want to say)" '
+    text += '\n To switch to another character type "setchar Character Name" (without quotes). You will need to write in third person '
+    text += '\n To control the story directly, type an exclamation mark before a command (example: "!A sword falls from the sky") '
     text += "\n\nThe following commands can be entered for any action: "
     text += '\n  "revert"   Reverts the last action allowing you to pick a different action.'
     text += '\n  "quit"     Quits the game and saves'
