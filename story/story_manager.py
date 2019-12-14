@@ -66,21 +66,36 @@ class Story:
         self.results.append(story_block)
 
     def latest_result(self):
+        result_list = []
+        result_list.append(self.story_start)
 
-        mem_ind = self.memory
-        if len(self.results) < 2:
-            latest_result = self.story_start
-        else:
-            latest_result = self.context
-        while mem_ind > 0:
+        if len(self.results) > 0:
+            mem_start = len(result_list) - self.memory
+            if mem_start < 0:
+                mem_start = 0
 
-            if len(self.results) >= mem_ind:
-                latest_result += self.actions[-mem_ind] + self.results[-mem_ind]
+            for i in range(mem_start, len(self.results)):
+                result_list.append(self.actions[i])
+                result_list.append(self.results[i])
 
-            mem_ind -= 1
+        return "".join(result_list)
 
-        return latest_result
-
+#    def latest_result(self):
+#
+#        mem_ind = self.memory
+#        if len(self.results) < 2:
+#            latest_result = self.story_start
+#        else:
+#            latest_result = self.context
+#        while mem_ind > 0:
+#
+#            if len(self.results) >= mem_ind:
+#                latest_result += self.actions[-mem_ind] + self.results[-mem_ind]
+#
+#            mem_ind -= 1
+#
+#        return latest_result
+#
     def __str__(self):
         story_list = [self.story_start]
         for i in range(len(self.results)):
